@@ -14,10 +14,6 @@
  * least PHP 7.2
  */
 
-if (version_compare(phpversion(), '7.2.0', '<')) {
-    die('Sorry but your version of PHP is too old, the minimum version to use is PHP 7.2.0');
-}
-
 define('REPO', 'https://github.com/cavo789/php_password');
 
 $task = filter_input(INPUT_POST, 'task', FILTER_SANITIZE_STRING);
@@ -141,6 +137,13 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
                 <div class="d-none" id="Result">
                     <p>The hash of <strong class="password"></strong> gives 
                     <strong class="hash"></strong>&nbsp;<span id="checkPwd"></span></p>
+
+                    <button class="btnClipboard d-none" data-clipboard-target="#Result .hash">
+                        Copy to clipboard
+                    </button>
+
+                    <hr/>
+
                     <p>Sample PHP code:</p>
                     <pre><code id="PHP_Sample" class="language-php"></code></pre>
                     <p>Store for instance the hash of this password in a database or any protected file
@@ -155,7 +158,23 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
         <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/prism.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-php.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
         <script type="text/javascript">
+
+            $(document).ready(function() {
+                if (typeof ClipboardJS === 'function') {
+
+                    $('.btnClipboard').removeClass('d-none');
+
+                    var clipboard = new ClipboardJS('.btnClipboard');
+
+                    clipboard.on('success', function(e) {
+                        alert('Hash copied!');
+                        e.clearSelection();
+                    });
+                }
+            });
+
             $('#btnHash').click(function(e) {
 
                 e.stopImmediatePropagation();
