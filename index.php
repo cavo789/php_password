@@ -140,7 +140,7 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
                 <hr/>
                 <div class="d-none" id="Result">
                     <p>The hash of <strong class="password"></strong> gives 
-                    <strong class="hash"></strong>.&nbsp;<span id="checkPwd"></span></p>
+                    <strong class="hash"></strong>&nbsp;<span id="checkPwd"></span></p>
                     <p>Sample PHP code:</p>
                     <pre><code id="PHP_Sample" class="language-php"></code></pre>
                     <p>Store for instance the hash of this password in a database or any protected file
