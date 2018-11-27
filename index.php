@@ -1,7 +1,7 @@
 <?php
 
 // Only valid if PHP7 or greater
-declare(strict_types = 1);
+// declare(strict_types = 1);
 
 /*
  * AUTHOR : AVONTURE Christophe.
@@ -13,6 +13,10 @@ declare(strict_types = 1);
  * For the maximum security, use the Argon2 hashing algorithm and for this reason, requires a
  * least PHP 7.2
  */
+
+if (version_compare(phpversion(), '7.2.0', '<')) {
+    die('Sorry but your version of PHP is too old, the minimum version to use is PHP 7.2.0');
+}
 
 define('REPO', 'https://github.com/cavo789/php_password');
 
@@ -28,8 +32,12 @@ if ('hash' == $task) {
     // According to cryptographic expert Argon is one of the best cryptographic function.
     // This algorithm had won  Password Hashing Competition in July 2015.
 
-    // --> the following line requires PHP 7.2
-    $PWD = password_hash($PWD, PASSWORD_ARGON2I);
+    // --> the following line requires PHP 7.2 but make sure that ARGON2I is well defined
+    if (defined('PASSWORD_ARGON2I')) {
+        $PWD = password_hash($PWD, PASSWORD_ARGON2I);
+    } else {
+        $PWD = password_hash($PWD, PASSWORD_DEFAULT);
+    }
 
     $arr = [];
 
@@ -138,6 +146,8 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
                     <p>Store for instance the hash of this password in a database or any protected file
                     (best outside your public folder) and don't use anymore your password 
                     in plain text but just verify the hash using <strong>password_verify()</strong>.</p>
+                    <p><em>Info: the hash will start with '$2y$' when the used algorithm is BCRYPT and with 
+                    '$argon2i$' when Argon2i was used (which is much better).</em></p>
                 </div>
             </div>
         </div>
