@@ -28,6 +28,10 @@ Just type a password in the text box and click on the `Hash` button.
 
 You'll then obtain the generated hash and, also, a PHP sample code for showing you how to use the hash.
 
+![Demo](images/demo.gif)
+
+## Interface with provided sample code
+
 ![Interface](images/interface.png)
 
 ## License
