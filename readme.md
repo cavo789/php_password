@@ -22,7 +22,7 @@ Notes:
 
 Clone this repository or just get a copy of the <a href="https://raw.githubusercontent.com/cavo789/php_password/master/index.php" target="_blank noreferrer noopener">index.php</a> and store the file, f.i., on your localhost.
 
-You can also use the [interface online](https://www.avonture.be/php_password) without installing anything.
+You can also use the [interface online](https://php-password.avonture.be/) without installing anything.
 
 ## Usage
 
