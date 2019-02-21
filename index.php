@@ -12,7 +12,7 @@
  *
  * For the maximum security, use the Argon2 hashing algorithm and for this reason, requires a
  * least PHP 7.2
- * 
+ *
  * Last mod:
  * 2019-01-08 - Abandonment of jQuery and migration to vue.js
  *                  Except for clipboard.min.js which requires jQuery
@@ -55,7 +55,7 @@ if ('hash' == $task) {
     die();
 } elseif ('login' == $task) {
     // Just to make sure that the generated hash is correct
-    $PWD = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_STRING)));
+    $PWD  = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_STRING)));
     $hash = base64_decode(trim(filter_var(($data['hash'] ?? ''), FILTER_SANITIZE_STRING)));
 
     $check = password_verify($PWD, $hash)
@@ -119,17 +119,17 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
             <div id="app" class="container">
                 <how-to-use demo="">
                     <p>Since PHP 7.x it is recommended to use the native <strong>password_hash()</strong>
-                        function 
+                        function
                         (<a href="https://www.atyantik.com/managing-passwords-correct-way-php/" target="_blank" rel="noopener noreferrer">read more</a>).
                     </p>
-                    <p>MD5 should be avoided since there are plenty of md5 dictionaries for helping 
+                    <p>MD5 should be avoided since there are plenty of md5 dictionaries for helping
                         to "crack" MD5 passwords like f.i. https://crackstation.net/.</p>
-                    <p>Note: since password_hash() is native, therefore there are no dependencies 
+                    <p>Note: since password_hash() is native, therefore there are no dependencies
                         with an external library.</p>
                     <div class="row">
                         <div class="col-sm">
                             <ul>
-                                <li>Type (or paste) the character string in the textarea below and 
+                                <li>Type (or paste) the character string in the textarea below and
                                     click on the Hash button; you'll get the hash of the password.</li>
                                 <li>Use the password like in the code sample that will be given.</li>
                             </ul>
@@ -147,7 +147,7 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
                 <hr/>
 
                 <div v-if="HASH">
-                    <p>The hash of <strong class="password">{{ PWD }}</strong> gives 
+                    <p>The hash of <strong class="password">{{ PWD }}</strong> gives
                     <strong class="hash">{{ HASH }}</strong>&nbsp;<span id="checkPwd" v-html="CHECK"></span></p>
 
                     <button class="btnClipboard d-none" data-clipboard-target=".hash">
@@ -173,9 +173,9 @@ if (password_verify($password, $hash)) {
 }
                     </code></pre>
                     <p>Store for instance the hash of this password in a database or any protected file
-                    (best outside your public folder) and don't use anymore your password 
+                    (best outside your public folder) and don't use anymore your password
                     in plain text but just verify the hash using <strong>password_verify()</strong>.</p>
-                    <p><em>Info: the hash will start with '$2y$' when the used algorithm is BCRYPT and with 
+                    <p><em>Info: the hash will start with '$2y$' when the used algorithm is BCRYPT and with
                     '$argon2i$' when Argon2i was used (which is much better).</em></p>
                 </div>
             </div>
@@ -204,7 +204,7 @@ if (password_verify($password, $hash)) {
                             <div class="col-sm">
                                 <slot></slot>
                             </div>
-                            <div v-if="demo" class="col-sm"><img v-bind:src="demo" alt="Demo"></div>                            
+                            <div v-if="demo" class="col-sm"><img v-bind:src="demo" alt="Demo"></div>
                         </div>
                     </details>`
             });
@@ -253,7 +253,7 @@ if (password_verify($password, $hash)) {
                                if (this.HASH!=='') {
                                    $('.btnClipboard').removeClass('d-none').removeAttr("disabled");
                                    var clipboard = new ClipboardJS('.btnClipboard');
-   
+
                                    clipboard.on('success', function(e) {
                                        alert('Password hash copied!');
                                        e.clearSelection();
