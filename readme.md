@@ -1,6 +1,6 @@
-![Banner](images/banner.jpg)
-
 # PHP Password interface
+
+![Banner](./banner.svg)
 
 > Easy interface for generating a hash for a plain text password. Type a plain text password and get his password_hash() hash.
 
