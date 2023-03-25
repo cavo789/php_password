@@ -22,11 +22,11 @@ define('REPO', 'https://github.com/cavo789/php_password');
 
 // Retrieve posted data
 $data = json_decode(file_get_contents('php://input'), true);
-$task = trim(filter_var(($data['task'] ?? ''), FILTER_SANITIZE_STRING));
+$task = trim(filter_var(($data['task'] ?? ''), FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
 if ('hash' == $task) {
     // Hash the password
-    $PWD = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_STRING)));
+    $PWD = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_FULL_SPECIAL_CHARS)));
 
     // Default is PASSWORD_BCRYPT
     // Always start with "$2y$" and has a length of 60 characters
@@ -55,8 +55,8 @@ if ('hash' == $task) {
     die();
 } elseif ('login' == $task) {
     // Just to make sure that the generated hash is correct
-    $PWD  = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_STRING)));
-    $hash = base64_decode(trim(filter_var(($data['hash'] ?? ''), FILTER_SANITIZE_STRING)));
+    $PWD  = base64_decode(trim(filter_var(($data['PWD'] ?? ''), FILTER_SANITIZE_FULL_SPECIAL_CHARS)));
+    $hash = base64_decode(trim(filter_var(($data['hash'] ?? ''), FILTER_SANITIZE_FULL_SPECIAL_CHARS)));
 
     $check = password_verify($PWD, $hash)
         ? '<span style="color:green;">(success, hash validated)</span>'
@@ -76,88 +76,103 @@ if (is_file($cat = __DIR__ . DIRECTORY_SEPARATOR . 'octocat.tmpl')) {
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <meta name="author" content="Christophe Avonture" />
-        <meta name="robots" content="noindex, nofollow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
-        <title>PHP - Password</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/themes/prism.min.css" rel="stylesheet" type="text/css">
-        <style>
-            details {
-                margin: 1rem;
-            }
-            summary {
-                font-weight: bold;
-            }
-            pre {
-                white-space: pre-wrap;       /* css-3 */
-                white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-                white-space: -pre-wrap;      /* Opera 4-6 */
-                white-space: -o-pre-wrap;    /* Opera 7 */
-                word-wrap: break-word;       /* Internet Explorer 5.5+ */
-            }
-            #checkPwd {
-                font-style: italic;
-            }
-            .error {
-                color: red;
-                font-weight: bold;
-            }
-            textarea {
-                margin-top: 10px;
-            }
-        </style>
-    </head>
-    <body>
-        <?php echo $github; ?>
-        <div class="container">
-            <div class="page-header"><h1>PHP Password</h1></div>
-            <div id="app" class="container">
-                <how-to-use demo="">
-                    <p>Since PHP 7.x it is recommended to use the native <strong>password_hash()</strong>
-                        function
-                        (<a href="https://www.atyantik.com/managing-passwords-correct-way-php/" target="_blank" rel="noopener noreferrer">read more</a>).
-                    </p>
-                    <p>MD5 should be avoided since there are plenty of md5 dictionaries for helping
-                        to "crack" MD5 passwords like f.i. https://crackstation.net/.</p>
-                    <p>Note: since password_hash() is native, therefore there are no dependencies
-                        with an external library.</p>
-                    <div class="row">
-                        <div class="col-sm">
-                            <ul>
-                                <li>Type (or paste) the character string in the textarea below and
-                                    click on the Hash button; you'll get the hash of the password.</li>
-                                <li>Use the password like in the code sample that will be given.</li>
-                            </ul>
-                        </div>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Christophe Avonture" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
+    <title>PHP - Password</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/themes/prism.min.css" rel="stylesheet" type="text/css">
+    <style>
+        details {
+            margin: 1rem;
+        }
+
+        summary {
+            font-weight: bold;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            /* css-3 */
+            white-space: -moz-pre-wrap;
+            /* Mozilla, since 1999 */
+            white-space: -pre-wrap;
+            /* Opera 4-6 */
+            white-space: -o-pre-wrap;
+            /* Opera 7 */
+            word-wrap: break-word;
+            /* Internet Explorer 5.5+ */
+        }
+
+        #checkPwd {
+            font-style: italic;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        textarea {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <?php echo $github; ?>
+    <div class="container">
+        <div class="page-header">
+            <h1>PHP Password</h1>
+        </div>
+        <div id="app" class="container">
+            <how-to-use demo="">
+                <p>Since PHP 7.x it is recommended to use the native <strong>password_hash()</strong>
+                    function
+                    (<a href="https://www.atyantik.com/managing-passwords-correct-way-php/" target="_blank" rel="noopener noreferrer">read more</a>).
+                </p>
+                <p>MD5 should be avoided since there are plenty of md5 dictionaries for helping
+                    to "crack" MD5 passwords like f.i. https://crackstation.net/.</p>
+                <p>Note: since password_hash() is native, therefore there are no dependencies
+                    with an external library.</p>
+                <div class="row">
+                    <div class="col-sm">
+                        <ul>
+                            <li>Type (or paste) the character string in the textarea below and
+                                click on the Hash button; you'll get the hash of the password.</li>
+                            <li>Use the password like in the code sample that will be given.</li>
+                        </ul>
                     </div>
-                </how-to-use>
-
-                <div class="form-group">
-                    <label for="PWD">Enter below the character string you want to use as password:</label>
-                    <input type="text" @keydown="doReset" class="form-control" v-model="PWD" name="PWD" width="100"></input>
                 </div>
+            </how-to-use>
 
-                <button type="button" @click="getHash" class="btn btn-primary">Hash</button>
+            <div class="form-group">
+                <label for="PWD">Enter below the character string you want to use as password:</label>
+                <input type="text" @keydown="doReset" class="form-control" v-model="PWD" name="PWD" width="100"></input>
+            </div>
 
-                <hr/>
+            <button type="button" @click="getHash" class="btn btn-primary">Hash</button>
 
-                <div v-if="HASH">
-                    <p>The hash of <strong class="password">{{ PWD }}</strong> gives
-                    <strong class="hash">{{ HASH }}</strong>&nbsp;<span id="checkPwd" v-html="CHECK"></span></p>
+            <hr />
 
-                    <button class="btnClipboard d-none" data-clipboard-target=".hash">
-                        Copy to clipboard
-                    </button>
+            <div v-if="HASH">
+                <p>The hash of <strong class="password">{{ PWD }}</strong> gives
+                    <strong class="hash">{{ HASH }}</strong>&nbsp;<span id="checkPwd" v-html="CHECK"></span>
+                </p>
 
-                    <hr/>
+                <button class="btnClipboard d-none" data-clipboard-target=".hash">
+                    Copy to clipboard
+                </button>
 
-                    <p>Sample PHP code:</p>
-                    <pre><code id="PHP_Sample" class="language-php">
+                <hr />
+
+                <p>Sample PHP code:</p>
+                <pre><code id="PHP_Sample" class="language-php">
 // 1. For instance, retrieve the password from a protected file, outside the public folder
 $hash = file_get_contents('../public/site/password.json');
 
@@ -165,40 +180,39 @@ $hash = file_get_contents('../public/site/password.json');
 // For instance $hash is equal to '{{ HASH }}'
 
 // 2. Get the filled-in password, for instance, from a submitted form
-$password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+$password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 // 3. And verify if the filled in password is the expected one
 if (password_verify($password, $hash)) {
     echo 'You can enter to this room, the password is correct.';
 }
                     </code></pre>
-                    <p>Store for instance the hash of this password in a database or any protected file
+                <p>Store for instance the hash of this password in a database or any protected file
                     (best outside your public folder) and don't use anymore your password
                     in plain text but just verify the hash using <strong>password_verify()</strong>.</p>
-                    <p><em>Info: the hash will start with '$2y$' when the used algorithm is BCRYPT and with
-                    '$argon2i$' when Argon2i was used (which is much better).</em></p>
-                </div>
+                <p><em>Info: the hash will start with '$2y$' when the used algorithm is BCRYPT and with
+                        '$argon2i$' when Argon2i was used (which is much better).</em></p>
             </div>
         </div>
-        <script src="https://unpkg.com/vue@2"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/prism.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-php.js"></script>
+    </div>
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-php.js"></script>
 
-        <!-- Clipboard requires jQuery -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <!-- Clipboard requires jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
 
-        <script type="text/javascript">
-            Vue.component('how-to-use', {
-                props: {
-                    demo: {
-                        type: String,
-                        required: true
-                    }
-                },
-                template:
-                    `<details>
+    <script type="text/javascript">
+        Vue.component('how-to-use', {
+            props: {
+                demo: {
+                    type: String,
+                    required: true
+                }
+            },
+            template: `<details>
                         <summary>How to use?</summary>
                         <div class="row">
                             <div class="col-sm">
@@ -207,26 +221,26 @@ if (password_verify($password, $hash)) {
                             <div v-if="demo" class="col-sm"><img v-bind:src="demo" alt="Demo"></div>
                         </div>
                     </details>`
-            });
+        });
 
-            var app = new Vue({
-                el: '#app',
-                data: {
-                    PWD: 'MyPasswordIsSecret',
-                    HASH: '',
-                    CHECK: ''
+        var app = new Vue({
+            el: '#app',
+            data: {
+                PWD: 'MyPasswordIsSecret',
+                HASH: '',
+                CHECK: ''
+            },
+            methods: {
+                doReset() {
+                    this.HASH = '';
+                    this.CHECK = '';
                 },
-                methods: {
-                    doReset() {
-                        this.HASH = '';
-                        this.CHECK = '';
-                    },
-                    getHash() {
-                        var $data = {
-                            task: 'hash',
-                            PWD: window.btoa(this.PWD)
-                        }
-                        axios.post('<?php echo basename(__FILE__); ?>', $data)
+                getHash() {
+                    var $data = {
+                        task: 'hash',
+                        PWD: window.btoa(this.PWD)
+                    }
+                    axios.post('<?php echo basename(__FILE__); ?>', $data)
                         .then(response => {
                             this.HASH = window.atob(response.data.hash)
 
@@ -237,11 +251,13 @@ if (password_verify($password, $hash)) {
                                 hash: window.btoa(this.HASH)
                             }
                             axios.post('<?php echo basename(__FILE__); ?>', $data)
-                            .then(response => {
-                                this.CHECK = window.atob(response.data)
-                            })
+                                .then(response => {
+                                    this.CHECK = window.atob(response.data)
+                                })
                         })
-                        .catch(function (error) {console.log(error);})
+                        .catch(function(error) {
+                            console.log(error);
+                        })
                         .then(function() {
                             if (typeof Prism === 'object') {
                                 // Use prism.js and highlight source code
@@ -250,20 +266,21 @@ if (password_verify($password, $hash)) {
 
                             // jQuery part, handle the Copy in the clipboard feature
                             if (typeof ClipboardJS === 'function') {
-                               if (this.HASH!=='') {
-                                   $('.btnClipboard').removeClass('d-none').removeAttr("disabled");
-                                   var clipboard = new ClipboardJS('.btnClipboard');
+                                if (this.HASH !== '') {
+                                    $('.btnClipboard').removeClass('d-none').removeAttr("disabled");
+                                    var clipboard = new ClipboardJS('.btnClipboard');
 
-                                   clipboard.on('success', function(e) {
-                                       alert('Password hash copied!');
-                                       e.clearSelection();
-                                   });
-                               }
+                                    clipboard.on('success', function(e) {
+                                        alert('Password hash copied!');
+                                        e.clearSelection();
+                                    });
+                                }
                             };
                         });
-                    }
                 }
-            });
-        </script>
-    </body>
+            }
+        });
+    </script>
+</body>
+
 </html>
