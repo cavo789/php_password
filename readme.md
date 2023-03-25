@@ -1,5 +1,7 @@
 # PHP Password interface
 
+![php 8.2](https://img.shields.io/badge/php-8.2-brightgreen?style=flat)
+
 ![Banner](./banner.svg)
 
 > Easy interface for generating a hash for a plain text password. Type a plain text password and get his password_hash() hash.
